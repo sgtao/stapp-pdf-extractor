@@ -31,9 +31,7 @@ def main():
         st.session_state["processing_done"] = False
 
     # --- F-1: PDFアップロード ---
-    uploaded_file = st.sidebar.file_uploader(
-        "PDFファイルをアップロード", type="pdf"
-    )
+    uploaded_file = st.file_uploader("PDFファイルをアップロード", type="pdf")
 
     if uploaded_file is not None:
         if st.session_state[
@@ -55,16 +53,16 @@ def main():
             st.session_state["pdf_path"] = temp_path
             st.session_state["pdf_extractor"] = PDFExtractor(temp_path)
             st.session_state["processing_done"] = False
-            st.sidebar.success(
+            st.success(
                 f"ファイル: **{uploaded_file.name}** をアップロードしました。"
             )
         else:
-            st.sidebar.info(
+            st.info(
                 f"ファイル: **{uploaded_file.name}** が既にロードされています。"
             )
 
         # --- F-2: 情報抽出開始ボタン ---
-        if st.sidebar.button(
+        if st.button(
             "🚀 情報抽出を開始",
             type="primary",
             disabled=st.session_state["processing_done"],
@@ -93,7 +91,7 @@ def main():
             st.session_state["pdf_extractor"].close_pdf()
         st.session_state["pdf_extractor"] = None
         st.session_state["processing_done"] = False
-        st.sidebar.warning("PDFファイルがクリアされました。")
+        st.warning("PDFファイルがクリアされました。")
 
     # --- 結果表示エリア ---
     if (
