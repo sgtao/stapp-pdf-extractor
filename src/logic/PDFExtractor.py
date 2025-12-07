@@ -1,5 +1,7 @@
 # PDFExtractor.py
-import fitz  # PyMuPDF
+import fitz
+
+# import json
 from typing import List, Dict, Any, Optional, Tuple
 from io import BytesIO
 
@@ -22,6 +24,7 @@ class PDFExtractor:
         self.doc: Optional[fitz.Document] = None
         self.page_texts: List[str] = []
         self.sections: List[Dict[str, Any]] = []
+        self.metadata: Dict[str, Any] = {}
 
     def load_pdf(self) -> None:
         """
@@ -43,6 +46,39 @@ class PDFExtractor:
             raise ValueError("PDFがロードされていません。")
 
         self.page_texts = [page.get_text("text") for page in self.doc]
+
+    def extract_metadata(self) -> None:
+        """
+        PDFドキュメントのメタデータを抽出し、self.metadataに格納する。
+        """
+        if not self.doc:
+            raise ValueError("PDFがロードされていません。")
+
+        # PyMuPDFのメタデータをそのまま取得
+        raw_meta = self.doc.metadata
+
+        # 不要な/扱いにくい情報を除外し、表示用に整形
+        cleaned_meta = {}
+        if raw_meta:
+            for key, value in raw_meta.items():
+                # fitzのメタデータキーは大文字・小文字が混ざるため、TitleやAuthorを
+                # ユーザーフレンドリーな形式で保持
+
+                # CreateDateとModDateはそのまま保持し、UI層で整形してもよい
+                if key in [
+                    "title",
+                    "author",
+                    "subject",
+                    "keywords",
+                    "creator",
+                    "producer",
+                    "creationDate",
+                    "modDate",
+                    "trapped",
+                ]:
+                    cleaned_meta[key] = value
+
+        self.metadata = cleaned_meta
 
     def extract_sections(self) -> None:
         """
@@ -146,3 +182,9 @@ class PDFExtractor:
         抽出されたページごとのテキストを取得する。
         """
         return self.page_texts
+
+    def get_full_structure(self) -> Dict[str, Any]:
+        """
+        メタデータとセクション情報を含む構造化された辞書を返す。
+        """
+        return {"metadata": self.metadata, "sections": self.sections}

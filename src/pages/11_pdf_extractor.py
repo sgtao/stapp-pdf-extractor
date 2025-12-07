@@ -69,10 +69,11 @@ def main():
             type="primary",
             disabled=st.session_state["processing_done"],
         ):
-            with st.spinner("PDFを解析中... (最大10秒程度)"):
+            with st.spinner("PDFを解析中..."):
                 try:
                     extractor = st.session_state["pdf_extractor"]
                     extractor.load_pdf()
+                    extractor.extract_metadata()
                     extractor.extract_text()
                     extractor.extract_sections()
                     st.session_state["processing_done"] = True
@@ -113,7 +114,7 @@ def main():
         )
 
         with tab_sections:
-            SectionViewer(extractor.get_sections()).render()
+            SectionViewer(extractor.get_full_structure()).render()
 
         with tab_text:
             # TextViewerは内部でStreamlitの状態管理に依存するため、
