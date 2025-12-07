@@ -57,18 +57,6 @@ class TextViewer:
             st.markdown("---")
             regex_patterns = self._get_regex_patterns()
 
-        # フィルタリング適用
-        # 全ページ一括表示のために、すべてのフィルタ済みテキストを取得しておく
-        filtered_texts = [
-            filter_text_lines(text, regex_patterns) for text in self.page_texts
-        ]
-
-        # 全ページ一括テキストの作成
-        # all_pages_text = "\n\n--- ページ区切り ---\n\n".join(filtered_texts)
-        all_pages_text = ""
-        for i, page_text in enumerate(filtered_texts):
-            all_pages_text += f"\n\n<!-- Page {i} -->\n\n" + page_text
-
         # ★ ページ単位 / 全ページ一括 の切り替えラジオボタン
         display_mode = st.radio(
             "表示方法の選択",
@@ -77,8 +65,35 @@ class TextViewer:
             horizontal=True,
         )
 
+        # ページ内の改行除去
+        omit_newline = st.checkbox(
+            "ページ内改行除去",
+            value=False,
+            help="`True`時、ページ内テキストの改行を抑止します",
+        )
+
         text_tabs = st.tabs(["整形済みテキスト", "コード形式"])
         section_title = f"### {display_mode} のテキスト"
+
+        # フィルタリング適用
+        # 全ページ一括表示のために、すべてのフィルタ済みテキストを取得しておく
+        # filtered_texts = [
+        #     filter_text_lines(text, regex_patterns) for text in self.page_texts
+        # ]
+        filtered_texts = []
+        for text in self.page_texts:
+            filterd_text = filter_text_lines(text, regex_patterns)
+            if omit_newline:
+                filterd_text = filterd_text.replace("\n"," ")
+            filtered_texts.append(filterd_text)
+
+        # 全ページ一括テキストの作成
+        # all_pages_text = "\n\n--- ページ区切り ---\n\n".join(filtered_texts)
+        all_pages_text = ""
+        for i, page_text in enumerate(filtered_texts):
+            all_pages_text += f"\n\n<!-- Page {i} -->\n\n" + page_text
+
+
         with text_tabs[0]:  # 整形済みテキスト表示 (F-7-1)
             st.markdown(section_title)
 
