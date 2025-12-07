@@ -28,8 +28,8 @@ a = Analysis(
         "src.ui.spiral_chart",
         "src.logic.calculations",
         # 以下は、Streamlitの依存パッケージ
-        "altair",
-        "pandas",
+        "pymupdf",
+        "fitz",
         "numpy",
         "plotly",
         "pillow",
