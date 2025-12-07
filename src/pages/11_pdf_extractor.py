@@ -2,9 +2,10 @@
 import streamlit as st
 import os
 from logic.PDFExtractor import PDFExtractor
-from ui.SectionViewer import SectionViewer
-from ui.TextViewer import TextViewer
 from ui.ImageViewer import ImageViewer
+from ui.SectionViewer import SectionViewer
+from ui.SideMenu import SideMenu
+from ui.TextViewer import TextViewer
 
 # --- 外部ライブラリに関するコメント ---
 # PDF解析と画像生成のため、PyMuPDF (fitz) を使用します。
@@ -18,6 +19,11 @@ def main():
     """
     st.set_page_config(page_title="PDF 情報抽出ツール", layout="wide")
 
+    # --- サイドメニュー ---
+    side_menu = SideMenu()
+    side_menu.render_menu()
+
+    # --- Main画面 ---
     st.title("📄 PDF情報抽出・解析ツール")
     st.markdown("研究用途における情報収集と解析の初期プロセスを加速します。")
 
