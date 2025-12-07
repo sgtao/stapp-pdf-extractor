@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "stapp-pdf-extractor"
+version = "0.1.0"
+description = "streamlit application for extracting from PDF file"
+authors = ["Shogo Ogami <sg.tao.so@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+packages = [
+    { include = "src", from = "." }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+streamlit = "^1.35.0"
+altair = "^5.3.0"
+pandas = "^2.2.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+taskipy = "^1.13.0"
+flake8 = "^7.1.0"
+black = "^24.4.2"
+pytest-cov = "^5.0.0"
+pyinstaller = "^6.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+# basic commands
+run  = "streamlit run src/main.py"
+test = "pytest tests"
+test-cov = "pytest tests --cov --cov-branch -svx"
+test-report = "pytest tests --cov --cov-report=html"
+
+# for code quality
+format = "black --line-length 79 src"
+lint = "flake8 src"
+check-format = { cmd = "task format && task lint", help = "run lint check after format" }
+
+# for package dependencies
+export-requirements = { cmd = "poetry export -f requirements.txt -o requirements.txt --without-hashes", help = "export requirements.txt file" }
+export-req-with-dev = { cmd = "poetry export -f requirements.txt -o requirements-dev.txt --without-hashes --with dev", help = "export requirements-dev.txt file" }
+
+# Docker commands
+docker-build = { cmd = "docker build -t my-stapp .", help = "build Docker image" }
+docker-run = { cmd = "docker run -p 8051:8051 my-stapp", help = "run Docker container" }
+
+# make distribution package
+rm-dist = { cmd = "rm -rf build dist", help = "remove build and dist directory" }
+build = { cmd = "pyinstaller run_stapp.spec --clean", help = "build distribution package" }
+copy-to-dist = { cmd = "cp -r src .streamlit hooks dist/run_stapp/.", help = "copy additional files to dist" }
+make-dist = { cmd = "task rm-dist && task build && task copy-to-dist", help = "make distribution package" }
