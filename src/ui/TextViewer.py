@@ -77,14 +77,11 @@ class TextViewer:
 
         # フィルタリング適用
         # 全ページ一括表示のために、すべてのフィルタ済みテキストを取得しておく
-        # filtered_texts = [
-        #     filter_text_lines(text, regex_patterns) for text in self.page_texts
-        # ]
         filtered_texts = []
         for text in self.page_texts:
             filterd_text = filter_text_lines(text, regex_patterns)
             if omit_newline:
-                filterd_text = filterd_text.replace("\n"," ")
+                filterd_text = filterd_text.replace("\n", " ")
             filtered_texts.append(filterd_text)
 
         # 全ページ一括テキストの作成
@@ -92,7 +89,6 @@ class TextViewer:
         all_pages_text = ""
         for i, page_text in enumerate(filtered_texts):
             all_pages_text += f"\n\n<!-- Page {i} -->\n\n" + page_text
-
 
         with text_tabs[0]:  # 整形済みテキスト表示 (F-7-1)
             st.markdown(section_title)
