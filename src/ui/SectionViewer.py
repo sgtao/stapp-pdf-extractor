@@ -23,7 +23,8 @@ class SectionViewer:
         with section_tabs[0]:  # テキスト表示
             st.markdown("### 整形済みテキスト")
             # 引数をfull_structureに変更
-            st.text(format_section_output(self.full_structure, "TEXT"))
+            # st.text(format_section_output(self.full_structure, "TEXT"))
+            st.markdown(format_section_output(self.full_structure, "TEXT"))
 
         with section_tabs[1]:  # st.code表示 (コピー容易性のため)
             st.markdown("### コード形式")

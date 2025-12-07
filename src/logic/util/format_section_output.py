@@ -35,17 +35,18 @@ def format_section_output(
     output_lines = []
 
     # メタデータの整形 (F-5)
-    output_lines.append("### 📄 PDFメタデータ")
+    output_lines.append("### 📄 PDF metadata")
     if metadata:
         for key, value in metadata.items():
             label = METADATA_LABELS.get(key.lower(), key.capitalize())
             # 日付文字列を整形するロジックは複雑になるため、ここではそのまま表示
-            output_lines.append(f"{label}: {value}")
+            output_lines.append(f"- {label}: {value}")
     else:
         output_lines.append("メタデータ情報はありませんでした。")
 
     output_lines.append("\n" + "=" * 40 + "\n")
-    output_lines.append("### 📑 セクション (目次) リスト")
+    # output_lines.append("### 📑 セクション (目次) リスト")
+    output_lines.append("### 📑 Section List")
 
     # セクション情報の整形 (F-5)
     if not sections:
@@ -60,7 +61,7 @@ def format_section_output(
         # F-5 の形式: <Chapter/Section番号>： <タイトル> ... <ページ番号>
         prefix = "  " * (level - 1)
         section_number = f"[{level}]" if level > 0 else "[?] "
-        formatted_line = f"{prefix}{section_number}： {title} ... (P.{page})"
+        formatted_line = f"- {prefix}{section_number}： {title} ... (P.{page})"
         output_lines.append(formatted_line)
 
     return "\n".join(output_lines)
