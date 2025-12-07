@@ -2,7 +2,7 @@
 import streamlit as st
 from typing import List, Dict, Any
 
-from logic.utils.format_section_output import format_section_output
+from logic.util.format_section_output import format_section_output
 
 
 # --- UIコンポーネント (関数) ---

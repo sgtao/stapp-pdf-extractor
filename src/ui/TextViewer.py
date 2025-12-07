@@ -2,7 +2,7 @@
 import streamlit as st
 from typing import List
 
-from logic.utils.filter_text_lines import filter_text_lines
+from logic.util.filter_text_lines import filter_text_lines
 
 
 # --- UIコンポーネント (関数) ---
