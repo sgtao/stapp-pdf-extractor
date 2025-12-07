@@ -64,7 +64,10 @@ class TextViewer:
         ]
 
         # 全ページ一括テキストの作成
-        all_pages_text = "\n\n--- ページ区切り ---\n\n".join(filtered_texts)
+        # all_pages_text = "\n\n--- ページ区切り ---\n\n".join(filtered_texts)
+        all_pages_text = ""
+        for i, page_text in enumerate(filtered_texts):
+            all_pages_text += f"\n\n<!-- Page {i} -->\n\n" + page_text
 
         # ★ ページ単位 / 全ページ一括 の切り替えラジオボタン
         display_mode = st.radio(
@@ -85,7 +88,7 @@ class TextViewer:
                     st.markdown(f"#### ページ {i + 1}")
                     st.text(filtered_text)
             else:  # 全ページ一括
-                st.markdown("#### 全ページテキスト")
+                # st.markdown("#### 全ページテキスト")
                 st.text(all_pages_text)  # st.text で表示
 
         with text_tabs[1]:  # コード形式表示 (F-7-2)
@@ -97,5 +100,5 @@ class TextViewer:
                     st.markdown(f"#### ページ {i + 1}")
                     st.code(filtered_text, language="plaintext")
             else:  # 全ページ一括
-                st.markdown("#### 全ページテキスト")
+                # st.markdown("#### 全ページテキスト")
                 st.code(all_pages_text, language="plaintext")
