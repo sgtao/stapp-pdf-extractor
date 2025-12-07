@@ -1,4 +1,4 @@
-# TextViewer.py
+# src/ui/TextViewer.py (改修後)
 import streamlit as st
 from typing import List
 
@@ -20,10 +20,10 @@ class TextViewer:
 
     def _get_regex_patterns(self) -> List[str]:
         """UIから正規表現パターンを取得する。"""
+        # ... (変更なし)
         regex_patterns = []
         for i in range(st.session_state["regex_count"]):
             key = f"regex_pattern_{i}"
-            # セッションステートで永続化
             default_value = (
                 st.session_state.get(key, r"^\s*Page\s+\d+\s*$")
                 if i == 0
@@ -52,28 +52,50 @@ class TextViewer:
             )
             if new_count != self.regex_count:
                 st.session_state["regex_count"] = new_count
-                st.rerun()  # パターン数を変更したら再実行して新しい入力欄を出す
+                st.rerun()
 
             st.markdown("---")
             regex_patterns = self._get_regex_patterns()
 
         # フィルタリング適用
+        # 全ページ一括表示のために、すべてのフィルタ済みテキストを取得しておく
         filtered_texts = [
             filter_text_lines(text, regex_patterns) for text in self.page_texts
         ]
 
+        # 全ページ一括テキストの作成
+        all_pages_text = "\n\n--- ページ区切り ---\n\n".join(filtered_texts)
+
+        # ★ ページ単位 / 全ページ一括 の切り替えラジオボタン
+        display_mode = st.radio(
+            "表示方法の選択",
+            ("ページ単位", "全ページ一括"),
+            index=0,
+            horizontal=True,
+        )
+
         text_tabs = st.tabs(["整形済みテキスト", "コード形式"])
+        section_title = f"### {display_mode} のテキスト"
+        with text_tabs[0]:  # 整形済みテキスト表示 (F-7-1)
+            st.markdown(section_title)
 
-        with text_tabs[0]:  # テキスト表示 (F-7-1)
-            st.markdown("### ページごとのテキスト (フィルタリング適用)")
-            for i, filtered_text in enumerate(filtered_texts):
-                st.markdown(f"#### ページ {i + 1}")
-                st.text(filtered_text)
+            if display_mode == "ページ単位":
+                # ページ単位表示 (既存ロジック)
+                for i, filtered_text in enumerate(filtered_texts):
+                    st.markdown(f"#### ページ {i + 1}")
+                    st.text(filtered_text)
+            else:  # 全ページ一括
+                st.markdown("#### 全ページテキスト")
+                st.text(all_pages_text)  # st.text で表示
 
-        with text_tabs[1]:  # st.code表示 (F-7-2)
-            st.markdown(
-                "### ページごとのテキスト (コード形式・フィルタリング適用)"
-            )
-            for i, filtered_text in enumerate(filtered_texts):
-                st.markdown(f"#### ページ {i + 1}")
-                st.code(filtered_text, language="plaintext")
+        with text_tabs[1]:  # コード形式表示 (F-7-2)
+            st.markdown(section_title)
+
+            if display_mode == "ページ単位":
+                # ページ単位表示 (既存ロジック)
+                for i, filtered_text in enumerate(filtered_texts):
+                    st.markdown(f"#### ページ {i + 1}")
+                    st.code(filtered_text, language="plaintext")
+            else:  # 全ページ一括
+                st.markdown("#### 全ページテキスト")
+                st.code(all_pages_text, language="plaintext")
