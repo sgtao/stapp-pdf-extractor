@@ -1,5 +1,6 @@
 # stapp-pdf-extractor
 - [streamlit](https://streamlit.io/)でPDFファイルから情報抽出する
+  * [Gemini](https://gemini.google.com/app) で作成
 
 ## Usage
 - [poetry cli](https://python-poetry.org/docs/)を利用する
