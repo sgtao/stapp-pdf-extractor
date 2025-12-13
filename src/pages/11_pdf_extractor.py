@@ -11,6 +11,7 @@ from ui.TextViewer import TextViewer
 # PDF解析と画像生成のため、PyMuPDF (fitz) を使用します。
 # Streamlitを使用するため、streamlitライブラリも使用します。
 # ------------------------------------
+APP_TITLE = "PDF情報抽出・解析ツール"
 
 
 def main():
@@ -19,12 +20,8 @@ def main():
     """
     st.set_page_config(page_title="PDF 情報抽出ツール", layout="wide")
 
-    # --- サイドメニュー ---
-    side_menu = SideMenu()
-    side_menu.render_menu()
-
-    # --- Main画面 ---
-    st.title("📄 PDF情報抽出・解析ツール")
+    st.page_link("main.py", label="Back to Home", icon="🏠")
+    st.subheader(f"📄 {APP_TITLE}")
     st.markdown("研究用途における情報収集と解析の初期プロセスを加速します。")
 
     # --- 状態管理 ---
@@ -145,4 +142,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # --- サイドメニュー ---
+    side_menu = SideMenu()
+    side_menu.render_menu()
+
+    # --- Main画面 ---
     main()
